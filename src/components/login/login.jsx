@@ -12,15 +12,17 @@ export default class login extends Component {
         super(props);
 
         this.state = {
-            redirect: false,
+            redirect: "false",
             id: "",
             password: "",
             role: ""
         };
+
+
     }
 
     state = {
-        redirect: false,
+        redirect: "false",
         id: "",
         password: "",
         role:""
@@ -37,16 +39,25 @@ export default class login extends Component {
     }
     
     ingresar = event =>{
-        axios.get('http://localhost:8888/getuser/1').then(response => 
+        axios.get('http://localhost:8888/v1/getuser/1')
+        .then(response => {
+            sessionStorage.setItem("logged", response.data.resp);
+            sessionStorage.setItem("role", response.data.role);
+            sessionStorage.setItem("id", response.data.id);
+            sessionStorage.setItem("name", response.data.name);
+            sessionStorage.setItem("email", response.data.email);
             this.setState(() => ({
-                redirect: response
+                redirect: response.data.resp
             }))
-        )
-              
+        })              
     }
 
     render() {
-        if (this.state.redirect===true) {
+        if (sessionStorage.getItem("logged")==="true") {
+            this.state.redirect = "true";
+        }
+
+        if (this.state.redirect==="true") {
             return (
             <div>
                 <Navigation />
@@ -64,7 +75,7 @@ export default class login extends Component {
                 </Grid>;
                 <Col xs={4} xsOffset={4}>
                     <div className="Login">
-                        <form onSubmit={this.handleSubmit}>
+                        <form>
                             <FormGroup controlId="id" bsSize="large">
                                 <ControlLabel>ID</ControlLabel>
                                 <FormControl
