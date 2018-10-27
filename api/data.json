@@ -1,0 +1,22 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "sbo",
+            "email": "sbo@mail.com",
+            "pass": 123456,
+            "role": 1
+        },
+        {
+            "id": 2,
+            "name": "lfu",
+            "email": "lfu@mail.com",
+            "pass": 123456,
+            "role": 2
+        }
+    ],
+    "Business":[{"id":1, "id_user":1, "name":"Small Store"}],
+    "Applications": [],
+    "Loans": [],
+    "Payments": []
+}
