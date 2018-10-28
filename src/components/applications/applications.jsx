@@ -18,7 +18,11 @@ export default class applications extends Component {
   }
 
   handleAddApplication() {
-    axios.post('http://localhost:8888/v1/postApplication', {
+    axios.get('http://localhost:8888/v1/postApplication')
+      .then(response => {
+        console.log(response)
+      })
+    /*axios.post('http://localhost:8888/v1/postApplication', {
       requested: this.state.value,
       id_user: sessionStorage.getItem("id")
     }).then(response => {
@@ -26,7 +30,7 @@ export default class applications extends Component {
       }).catch(function (error) {
         console.log(error);
       })  
-    this.setState({ show: false });
+    this.setState({ show: false });*/
   }
 
   handleClose() {
