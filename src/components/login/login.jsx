@@ -13,7 +13,7 @@ export default class login extends Component {
 
         this.state = {
             redirect: "false",
-            id: "",
+            name: "",
             password: "",
             role: ""
         };
@@ -23,13 +23,13 @@ export default class login extends Component {
 
     state = {
         redirect: "false",
-        id: "",
+        name: "",
         password: "",
         role:""
     };
 
     validateForm() {
-        return this.state.id.length > 0 && this.state.password.length > 0;
+        return this.state.name.length > 0 && this.state.password.length > 0;
     }
 
     handleChange = event => {
@@ -39,7 +39,7 @@ export default class login extends Component {
     }
     
     ingresar = event =>{
-        axios.get('http://localhost:8888/v1/getuser/1')
+        axios.get('http://127.0.0.1:5000/v1/getUser/' + this.state.name)
         .then(response => {
             sessionStorage.setItem("logged", response.data.resp);
             sessionStorage.setItem("role", response.data.role);
@@ -76,11 +76,11 @@ export default class login extends Component {
                 <Col xs={4} xsOffset={4}>
                     <div className="Login">
                         <form>
-                            <FormGroup controlId="id" bsSize="large">
-                                <ControlLabel>ID</ControlLabel>
+                            <FormGroup controlId="name" bsSize="large">
+                                <ControlLabel>Name</ControlLabel>
                                 <FormControl
                                     autoFocus
-                                    value={this.state.id}
+                                    value={this.state.name}
                                     onChange={this.handleChange}
                                 />
                             </FormGroup>

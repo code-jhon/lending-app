@@ -1,20 +1,39 @@
-from flask import Flask, request
-from flask_restful import Resource, Api
+from flask import Flask
+from flask_restful import reqparse, abort, Api, Resource
+from flask_cors import CORS, cross_origin
+import json
+from pprint import pprint
+
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
-todos = {}
+parser = reqparse.RequestParser()
+parser.add_argument('task')
 
-class TodoSimple(Resource):
-    def get(self, todo_id):
-        return {todo_id: todos[todo_id]}
+class JsonHandler:
+    def __init__(self):
+        pass
 
-    def put(self, todo_id):
-        todos[todo_id] = request.form['data']
-        return {todo_id: todos[todo_id]}
+    def jread(self):
+        with open('./api/data.json', encoding='utf-8') as json_data:
+            data = json.load(json_data)
+        return data
 
-api.add_resource(TodoSimple, '/<string:todo_id>')
+class UserHandler(Resource):
+    def get(self, u_name):
+        data = JsonHandler()
+        loaded_json = data.jread()
+        for x in loaded_json["users"]:
+            if x["name"] == u_name:
+	            return {'resp': "true", 'role':x["role"], 'id':x["id"], 'name':x["name"], 'email':x["email"]}
+    
+    def post(self):
+        args = parser.parse_args()
+        return {'args': args}, 201
+
+api.add_resource(UserHandler, '/v1/getUser/<string:u_name>')
 
 if __name__ == '__main__':
     app.run(debug=True)
