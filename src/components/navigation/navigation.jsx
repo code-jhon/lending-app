@@ -14,16 +14,18 @@ function CustomLinkExample() {
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to='/applications'>Lending-App</Link>
+              <Link to='/'>Lending-App</Link>
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
+            <ItemLink activeOnlyWhenExact={true} to="/" label="Home" />
             <ItemLink activeOnlyWhenExact={true} to="/applications" label="Applications" />
             <ItemLink activeOnlyWhenExact={false} to="/loans" label="Loans" />
             <ItemLink activeOnlyWhenExact={false} to="/payments" label="Payments" />
             <ItemLink activeOnlyWhenExact={false} to="/about" label="About" />
           </Nav>
         </Navbar>
+        <Route exact path="/" component={Home} />
         <Route exact path="/applications" component={Applications} />
         <Route exact path="/loans" component={Loans} />
         <Route exact path="/payments" component={Payments} />
@@ -44,6 +46,14 @@ function ItemLink({ label, to, activeOnlyWhenExact }) {
         </NavItem>
       )}
     />
+  );
+}
+
+function Home() {
+  return (
+    <div>
+      <h2>home</h2>
+    </div>
   );
 }
 
