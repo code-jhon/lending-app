@@ -38,7 +38,8 @@ export default class applications extends Component {
         "requested_amount":this.state.requested_amount
       })
       .then(response => {
-        this.forceUpdate();
+        this.handleClose();
+        this.render();
       })
   }
 
@@ -94,13 +95,19 @@ export default class applications extends Component {
       })
   }
 
+  shouldComponentUpdate(nextProps) {
+    const BsTaxId = this.state.BsTaxId !== nextProps.title;
+    const differentDone = this.props.done !== nextProps.done
+    return differentTitle || differentDone;
+  }
+
+
   popoverHoverFocus(item) {
     return (
     <Popover id="popover-trigger-hover-focus" title={item.Bsname}>
       <strong>Business TaxId</strong> {item.BsTaxId}.<br></br>
       <strong>Business name</strong> {item.Bsname}.<br></br>
-      <strong>Business city</strong> {item.Bscity}.<br></br>
-      <strong>Business state</strong> {item.Bsstate}.<br></br>
+      <strong>Business city</strong> {item.Bscity} / {item.Bsstate}.<br></br>
       </Popover>
     )
   }

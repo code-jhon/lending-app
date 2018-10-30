@@ -57,12 +57,13 @@ class ApplicationHandler(Resource):
         Bsstate = args["Bsstate"]
         requested_amount = args["requested_amount"]
 
+        status = ""
         if int(requested_amount) < 50000:
-            Bsstate = "Approved"
+            status = "Approved"
         if int(requested_amount) == 50000:
-            Bsstate = "Undecided"
+            status = "Undecided"
         if int(requested_amount) > 50000:
-            Bsstate = "Declined"
+            status = "Declined"
 
         entry = {
             'user': user,
@@ -71,7 +72,8 @@ class ApplicationHandler(Resource):
             'Bsname': Bsname,
             'Bscity': Bscity,
             'Bsstate': Bsstate,
-            'requested_amount': requested_amount
+            'requested_amount': requested_amount,
+            'status':status
             }
 
         dt = JsonHandler()
