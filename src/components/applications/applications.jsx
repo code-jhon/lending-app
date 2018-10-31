@@ -96,9 +96,8 @@ export default class applications extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const BsTaxId = this.state.BsTaxId !== nextProps.title;
-    const differentDone = this.props.done !== nextProps.done
-    return differentTitle || differentDone;
+    const BsTaxId = this.state.BsTaxId !== nextProps.BsTaxId;
+    return BsTaxId;
   }
 
 

@@ -21,7 +21,7 @@ class JsonHandler:
         return data
 
     def jwrite(self, entry, target):
-        data = '';
+        data = ''
         with open('./api/data.json', mode='r+', encoding='utf-8') as json_file:
             data = json.load(json_file)
             data[target].append(entry)
@@ -40,6 +40,12 @@ class UserHandler(Resource):
         for x in loaded_json["users"]:
             if x["name"] == u_name:
 	            return {'resp': "true", 'role':x["role"], 'id':x["id"], 'name':x["name"], 'email':x["email"]}
+
+class LoansHandler(Resource):
+    def get(self):
+        data = JsonHandler()
+        loaded_json = data.jread()
+        return {'resp': loaded_json["Loans"], 'size':len(loaded_json["Loans"])}
 
 class ApplicationHandler(Resource):
     def get(self):
@@ -65,7 +71,7 @@ class ApplicationHandler(Resource):
         if int(requested_amount) > 50000:
             status = "Declined"
 
-        entry = {
+        application = {
             'user': user,
             'user_email': user_email,
             'BsTaxId': BsTaxId,
@@ -77,12 +83,28 @@ class ApplicationHandler(Resource):
             }
 
         dt = JsonHandler()
-        res_json = dt.jwrite(entry, "Applications")
+        res_json = dt.jwrite(application, "Applications")
+
+        #Loans
+        if status=="Approved":
+            loan_status="Active"
+            loan = {
+                'user': user,
+                'user_email': user_email,
+                'BsTaxId': BsTaxId,
+                'Bsname': Bsname,
+                'Bscity': Bscity,
+                'Bsstate': Bsstate,
+                'requested_amount': requested_amount,
+                'status': loan_status
+            }
+            res_json = dt.jwrite(loan, "Loans")
 
         return res_json, 201
 
 api.add_resource(UserHandler, '/v1/getUser/<string:u_name>')
 api.add_resource(ApplicationHandler, '/v1/getApplications', '/v1/postApplication')
+api.add_resource(LoansHandler, '/v1/getLoans')
 
 if __name__ == '__main__':
     app.run(debug=True)
