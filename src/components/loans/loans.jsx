@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { OverlayTrigger, Popover, Table, Col, Row, Button, Glyphicon, Modal, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
 import axios from 'axios'
 
-export default class applications extends Component {
+export default class loans extends Component {
   constructor(props, context) {
     super(props, context);
 

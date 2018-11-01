@@ -20,6 +20,12 @@ class JsonHandler:
             data = json.load(json_data)
         return data
 
+    def jnum_rows(self, target):
+        with open('./api/data.json', encoding='utf-8') as json_data:
+            data = json.load(json_data)
+            num_rows = len(data[target])
+        return num_rows
+
     def jwrite(self, entry, target):
         data = ''
         with open('./api/data.json', mode='r+', encoding='utf-8') as json_file:
@@ -46,6 +52,13 @@ class LoansHandler(Resource):
         data = JsonHandler()
         loaded_json = data.jread()
         return {'resp': loaded_json["Loans"], 'size':len(loaded_json["Loans"])}
+
+
+class PaymentsHandler(Resource):
+    def get(self):
+        data = JsonHandler()
+        loaded_json = data.jread()
+        return {'resp': loaded_json["Payments"], 'size': len(loaded_json["Payments"])}
 
 class ApplicationHandler(Resource):
     def get(self):
@@ -87,14 +100,12 @@ class ApplicationHandler(Resource):
 
         #Loans
         if status=="Approved":
+            loans_amount = dt.jnum_rows("Loans")
             loan_status="Active"
             loan = {
+                'id':loans_amount+1,
                 'user': user,
-                'user_email': user_email,
-                'BsTaxId': BsTaxId,
                 'Bsname': Bsname,
-                'Bscity': Bscity,
-                'Bsstate': Bsstate,
                 'requested_amount': requested_amount,
                 'status': loan_status
             }
@@ -105,6 +116,8 @@ class ApplicationHandler(Resource):
 api.add_resource(UserHandler, '/v1/getUser/<string:u_name>')
 api.add_resource(ApplicationHandler, '/v1/getApplications', '/v1/postApplication')
 api.add_resource(LoansHandler, '/v1/getLoans')
+api.add_resource(PaymentsHandler, '/v1/getPayments')
 
 if __name__ == '__main__':
     app.run(debug=True)
+
