@@ -1,0 +1,37 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "sbo",
+            "email": "sbo@mail.com",
+            "address": "1500 Lincoln Park",
+            "city": "Cali",
+            "state": "valle",
+            "postal_code": 790030,
+            "pass": 123456,
+            "role": 1
+        }
+    ],
+    "Applications": [
+        {
+            "user": "sbo",
+            "user_email": "sbo@mail.com",
+            "BsTaxId": "1",
+            "Bsname": "Surfing bird",
+            "Bscity": "Seattle",
+            "Bsstate": "California",
+            "requested_amount": "1500",
+            "status": "Approved"
+        }
+    ],
+    "Loans": [
+        {
+            "id": 1,
+            "user": "sbo",
+            "Bsname": "Surfing bird",
+            "requested_amount": "1500",
+            "status": "Active"
+        }
+    ],
+    "Payments": []
+}

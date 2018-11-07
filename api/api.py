@@ -16,24 +16,24 @@ class JsonHandler:
         pass
 
     def jread(self):
-        with open('./api/data.json', encoding='utf-8') as json_data:
+        with open('db.json', encoding='utf-8') as json_data:
             data = json.load(json_data)
         return data
 
     def jnum_rows(self, target):
-        with open('./api/data.json', encoding='utf-8') as json_data:
+        with open('db.json', encoding='utf-8') as json_data:
             data = json.load(json_data)
             num_rows = len(data[target])
         return num_rows
 
     def jwrite(self, entry, target):
         data = ''
-        with open('./api/data.json', mode='r+', encoding='utf-8') as json_file:
+        with open('db.json', mode='r+', encoding='utf-8') as json_file:
             data = json.load(json_file)
             data[target].append(entry)
             json_file.truncate(0)
 
-        with open('./api/data.json', mode='w', encoding='utf-8') as json_file:
+        with open('db.json', mode='w', encoding='utf-8') as json_file:
             json.dump(data, json_file)
         
         return data
@@ -111,7 +111,7 @@ class ApplicationHandler(Resource):
             }
             res_json = dt.jwrite(loan, "Loans")
 
-        return res_json, 201
+        return {'resp': res_json["Applications"], 'size':len(res_json["Applications"])}, 201
 
 api.add_resource(UserHandler, '/v1/getUser/<string:u_name>')
 api.add_resource(ApplicationHandler, '/v1/getApplications', '/v1/postApplication')

@@ -9,7 +9,9 @@
     "react-dom": "^16.6.0",
     "react-promise": "^2.0.3",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.0.5"
+    "react-scripts": "2.0.5",
+    "react-sound": "^1.2.0",
+    "soundmanager2": "^2.97.20170602"
   },
   "scripts": {
     "start": "react-scripts start",

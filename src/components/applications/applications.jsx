@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { OverlayTrigger, Popover, Table, Col, Row, Button, Glyphicon, Modal, FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap'
+import { OverlayTrigger, Popover, Table, Col, Row, Button, Glyphicon, Modal, FormGroup, ControlLabel, FormControl, HelpBlock, Label} from 'react-bootstrap'
 import axios from 'axios'
 
 export default class applications extends Component {
@@ -39,7 +39,14 @@ export default class applications extends Component {
       })
       .then(response => {
         this.handleClose();
-        this.render();
+        this.setState({ table_data: response.data.resp, table_rows: response.size })
+        this.setState({ 
+          BsTaxId : '',
+          Bsname : '',
+          Bscity : '',
+          Bsstate : '',
+          requested_amount : ''
+         })
       })
   }
 
@@ -61,17 +68,11 @@ export default class applications extends Component {
   handleChange(e) {
     this.setState({ [e.target.id]: e.target.value });
   }
-/*
-"BsTaxId": 78894565,
-            "Bsname": "Small Store",
-            "Bscity": "Cali",
-            "Bsstate": "Valle",
-            "requested_amount":50001,
-*/
+
   addForm(){
     return(
       <form>
-        <ControlLabel>Please fill the fields to request an application</ControlLabel>
+        <ControlLabel className="Custom_title">Please fill the fields to request an application</ControlLabel>
         <FormGroup
           controlId="formBasicText"
           validationState={this.getValidationState()}
@@ -88,18 +89,12 @@ export default class applications extends Component {
     )
   }
 
-  componentWillMount(){
+  componentDidMount(){
     axios.get('http://127.0.0.1:5000/v1/getApplications')
       .then(response => {
         this.setState({ table_data: response.data.resp, table_rows: response.size })
       })
   }
-
-  shouldComponentUpdate(nextProps) {
-    const BsTaxId = this.state.BsTaxId !== nextProps.BsTaxId;
-    return BsTaxId;
-  }
-
 
   popoverHoverFocus(item) {
     return (
@@ -109,6 +104,29 @@ export default class applications extends Component {
       <strong>Business city</strong> {item.Bscity} / {item.Bsstate}.<br></br>
       </Popover>
     )
+  }
+
+  handleStatus(status) {
+    let style;
+    switch (status) {
+      case "Approved":
+        style = "success"
+        break;
+      case "Pending":
+        style = "success"
+        break;
+      case "Denied":
+        style = "warning"
+        break;
+    
+      default:
+        style = "default"
+        break;
+    }
+
+    return (
+      <Label bsStyle={style}>{status}</Label>
+    );
   }
   
   render() {
@@ -123,9 +141,9 @@ export default class applications extends Component {
     }
 
     return (
-      <div>
+      <div className="bg-image">
         <Row>
-          <Col xs={4} xsOffset={4}>
+          <Col xs={6} xsOffset={2}>
             <Table responsive>
               <thead>
                 <tr>
@@ -150,7 +168,7 @@ export default class applications extends Component {
                     </OverlayTrigger>
                     
                     <td>{item.requested_amount}</td>
-                    <td>{item.status}</td>
+                    <td>{this.handleStatus(item.status)}</td>
                   </tr>
                 )}
               </tbody>
@@ -158,14 +176,14 @@ export default class applications extends Component {
           </Col>
           <Col xs={4}>
             <Col xs={6}>
-              <Button bsStyle="primary" bsSize="medium" block onClick={this.handleShow}><Glyphicon glyph="star" /> Request here!</Button>
+              <Button bsStyle="primary" bsSize="sm" block onClick={this.handleShow}><Glyphicon glyph="star" /> Request here!</Button>
             </Col>
           </Col>
         </Row>
 
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Make and Application</Modal.Title>
+            <Modal.Title>Make an Application</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>

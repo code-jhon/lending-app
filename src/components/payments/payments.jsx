@@ -21,7 +21,8 @@ export default class payments extends Component {
       Bsstate: '',
       requested_amount: "",
       LoanId: "",
-      response: ''
+      response: '',
+      options_data: []
     };
 
   }
@@ -44,8 +45,17 @@ export default class payments extends Component {
   }
 
   handleShow() {
+    this.getOptions()
     this.setState({ show: true });
   }
+
+  getOptions(){
+    axios.get('http://127.0.0.1:5000/v1/getLoans')
+      .then(response => {
+        this.setState({ options_data: response.data.resp })
+      })
+  }
+
   getValidationState() {
     const length = this.state.requested_amount.length;
     if (length === 4) return 'success';
@@ -59,6 +69,7 @@ export default class payments extends Component {
   }
 
   addForm() {
+    let items = this.state.options_data;
     return (
       <form>
         <ControlLabel>Please fill the fields to make a payment</ControlLabel>
@@ -66,8 +77,12 @@ export default class payments extends Component {
           controlId="formBasicText"
           validationState={this.getValidationState()}
         >
-          <FormControl disabled type="number" id="LoanId" value={this.state.LoanId} placeholder="Loan id" onChange={this.handleChange} />
-          <FormControl type="number" id="Amount" value={this.state.Amount} placeholder="Amount" onChange={this.handleChange} />
+          <FormControl componentClass="select" placeholder="Choose a Loan">
+            {items.map(item =>
+              <option key={item.id} value={item.id} >{item.Bsname}({item.requested_amount})</option>
+            )}
+          </FormControl>
+          <FormControl type="number" id="Amount" value={this.state.Amount} placeholder="Amount to pay" onChange={this.handleChange} />
           <FormControl.Feedback />
           <HelpBlock>Validation is based on requested_amount length.</HelpBlock>
         </FormGroup>
@@ -75,7 +90,7 @@ export default class payments extends Component {
     )
   }
 
-  componentWillMount() {
+  componentDidMount() {
     axios.get('http://127.0.0.1:5000/v1/getPayments')
       .then(response => {
         this.setState({ table_data: response.data.resp, table_rows: response.size})
@@ -105,9 +120,9 @@ export default class payments extends Component {
     }
 
     return (
-      <div>
+      <div className="bg-image">
         <Row>
-          <Col xs={4} xsOffset={4}>
+          <Col xs={6} xsOffset={2}>
             <Table responsive>
               <thead>
                 <tr>
@@ -133,17 +148,21 @@ export default class payments extends Component {
 
                     <td>{item.requested_amount}</td>
                     <td>{item.status}</td>
-                    <td><Button bsStyle="primary" bsSize="medium" block onClick={this.handleShow}><Glyphicon glyph="new-window" /> Pay</Button></td>
                   </tr>
                 )}
               </tbody>
             </Table>
           </Col>
+          <Col xs={4}>
+            <Col xs={6}>
+              <Button bsStyle="primary" bsSize="sm" block onClick={this.handleShow}><Glyphicon glyph="new-window" /> Pay here!</Button>
+            </Col>
+          </Col>
         </Row>
 
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Make and Application</Modal.Title>
+            <Modal.Title>Make an Application</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>
@@ -152,7 +171,7 @@ export default class payments extends Component {
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.handleClose}>Close</Button>
-            <Button bsStyle="primary" onClick={this.handleAddApplication}>Request</Button>
+            <Button bsStyle="primary" onClick={this.handleAddApplication}>Pay</Button>
           </Modal.Footer>
         </Modal>
       </div>

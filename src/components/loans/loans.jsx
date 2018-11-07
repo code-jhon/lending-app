@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { OverlayTrigger, Popover, Table, Col, Row, Button, Glyphicon, Modal, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
+import { OverlayTrigger, Popover, Table, Col, Row, Label } from 'react-bootstrap'
 import axios from 'axios'
 
 export default class loans extends Component {
@@ -47,6 +47,26 @@ export default class loans extends Component {
     )
   }
 
+  handleStatus(status) {
+    let style;
+    switch (status) {
+      case "Active":
+        style = "success"
+        break;
+      case "Closed":
+        style = "warning"
+        break;
+
+      default:
+        style = "default"
+        break;
+    }
+
+    return (
+      <Label bsStyle={style}>{status}</Label>
+    );
+  }
+
   render() {
 
     let items;
@@ -58,9 +78,9 @@ export default class loans extends Component {
     }
 
     return (
-      <div>
+      <div className="bg-image">
         <Row>
-          <Col xs={4} xsOffset={4}>
+          <Col xs={6} xsOffset={2}>
             <Table responsive>
               <thead>
                 <tr>
@@ -85,7 +105,7 @@ export default class loans extends Component {
                     </OverlayTrigger>
 
                     <td>{item.requested_amount}</td>
-                    <td>{item.status}</td>
+                    <td>{this.handleStatus(item.status)}</td>
                   </tr>
                 )}
               </tbody>

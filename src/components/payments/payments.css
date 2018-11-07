@@ -1,0 +1,11 @@
+.bg-image{
+    background-image: url("https://wallpaper.wiki/wp-content/uploads/2017/04/wallpaper.wiki-All-White-Background-for-Desktop-PIC-WPC0013442.jpg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100%;
+    min-width: 100%;
+    position:fixed;
+    top:52px;
+}
