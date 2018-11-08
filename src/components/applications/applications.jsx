@@ -72,7 +72,6 @@ export default class applications extends Component {
   addForm(){
     return(
       <form>
-        <ControlLabel className="Custom_title">Please fill the fields to request an application</ControlLabel>
         <FormGroup
           controlId="formBasicText"
           validationState={this.getValidationState()}

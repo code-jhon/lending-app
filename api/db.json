@@ -13,25 +13,12 @@
         }
     ],
     "Applications": [
-        {
-            "user": "sbo",
-            "user_email": "sbo@mail.com",
-            "BsTaxId": "1",
-            "Bsname": "Surfing bird",
-            "Bscity": "Seattle",
-            "Bsstate": "California",
-            "requested_amount": "1500",
-            "status": "Approved"
-        }
+
     ],
     "Loans": [
-        {
-            "id": 1,
-            "user": "sbo",
-            "Bsname": "Surfing bird",
-            "requested_amount": "1500",
-            "status": "Active"
-        }
+
     ],
-    "Payments": []
+    "Payments": [
+
+    ]
 }

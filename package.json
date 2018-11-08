@@ -13,6 +13,10 @@
     "react-sound": "^1.2.0",
     "soundmanager2": "^2.97.20170602"
   },
+  "engines": {
+    "npm": "6.4.1",
+    "node": "8.12.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

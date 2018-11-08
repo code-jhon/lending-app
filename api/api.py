@@ -4,12 +4,42 @@ from flask_cors import CORS, cross_origin
 import json
 from pprint import pprint
 
-
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
+class dataHandler:
+    def __init__(self):
+        pass
 
+    def getAmountLeft(self, loan, amount):
+        amount_left = 0
+        data = JsonHandler()
+        dt = data.jread()
+        l = dt["Loans"]
+
+        for item in l:
+            if int(item["id"])==int(loan):
+                amount_left = int(item["requested_amount"])-int(amount)
+                
+        return amount_left
+
+    def getRemainingFees(self, loan):
+        remaining_fees = 0
+
+        data = JsonHandler()
+        dt = data.jread()
+
+        l = dt["Loans"]
+
+        for item in l:
+            if int(item["id"]) == int(loan):
+                remaining_fees = int(item["fees"])-1
+                item["fees"] = remaining_fees
+                data.jwrite(item, "Loans")
+
+        return remaining_fees
+    
 
 class JsonHandler:
     def __init__(self):
@@ -60,6 +90,32 @@ class PaymentsHandler(Resource):
         loaded_json = data.jread()
         return {'resp': loaded_json["Payments"], 'size': len(loaded_json["Payments"])}
 
+    def post(self):
+        args = request.get_json(force=True)
+        u_id = args["id"]
+        loan = args["loan"]
+        amount = args["amount"]
+
+        data = JsonHandler()
+        oper = dataHandler()
+
+        amount_left = oper.getAmountLeft(loan, amount)
+        remaining_fees = oper.getRemainingFees(loan)
+        status = 0
+
+        payment = {
+            'user': u_id,
+            'loan': loan,
+            'fee': amount,
+            'amount_left': amount_left,
+            'remaining_fees': remaining_fees,
+            'status': status
+        }
+        data.jwrite(payment, "Payments")
+        
+        loaded_json = data.jread()
+        return {'resp': loaded_json["Payments"], 'size': len(loaded_json["Payments"])}, 201
+
 class ApplicationHandler(Resource):
     def get(self):
         data = JsonHandler()
@@ -107,6 +163,7 @@ class ApplicationHandler(Resource):
                 'user': user,
                 'Bsname': Bsname,
                 'requested_amount': requested_amount,
+                'fees': 48,
                 'status': loan_status
             }
             res_json = dt.jwrite(loan, "Loans")
@@ -116,7 +173,7 @@ class ApplicationHandler(Resource):
 api.add_resource(UserHandler, '/v1/getUser/<string:u_name>')
 api.add_resource(ApplicationHandler, '/v1/getApplications', '/v1/postApplication')
 api.add_resource(LoansHandler, '/v1/getLoans')
-api.add_resource(PaymentsHandler, '/v1/getPayments')
+api.add_resource(PaymentsHandler, '/v1/getPayments', '/v1/postPayment')
 
 if __name__ == '__main__':
     app.run(debug=True)

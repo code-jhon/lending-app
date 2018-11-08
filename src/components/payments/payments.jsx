@@ -9,7 +9,7 @@ export default class payments extends Component {
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleAddApplication = this.handleAddApplication.bind(this);
+    this.handleAddPayment = this.handleAddPayment.bind(this);
 
     this.state = {
       show: false,
@@ -21,22 +21,24 @@ export default class payments extends Component {
       Bsstate: '',
       requested_amount: "",
       LoanId: "",
+      PaymentVal:"",
       response: '',
       options_data: []
     };
 
   }
 
-  handleAddApplication() {
+  handleAddPayment() {
     axios.post(
       'http://127.0.0.1:5000/v1/postPayment',
       {
         "id": sessionStorage.getItem("name"),
-        "amount": this.state.requested_amount
+        "loan":this.state.LoanId,
+        "amount": this.state.PaymentVal
       })
       .then(response => {
         this.handleClose();
-        this.render();
+        this.setState({ table_data: response.data.resp, table_rows: response.size })
       })
   }
 
@@ -72,17 +74,15 @@ export default class payments extends Component {
     let items = this.state.options_data;
     return (
       <form>
-        <ControlLabel>Please fill the fields to make a payment</ControlLabel>
         <FormGroup
-          controlId="formBasicText"
           validationState={this.getValidationState()}
         >
-          <FormControl componentClass="select" placeholder="Choose a Loan">
+          <FormControl id="LoanId" componentClass="select" placeholder="Choose a Loan" onChange={this.handleChange}>
             {items.map(item =>
               <option key={item.id} value={item.id} >{item.Bsname}({item.requested_amount})</option>
             )}
           </FormControl>
-          <FormControl type="number" id="Amount" value={this.state.Amount} placeholder="Amount to pay" onChange={this.handleChange} />
+          <FormControl type="number" id="PaymentVal" value={this.state.PaymentVal} placeholder="Amount to pay" onChange={this.handleChange} />
           <FormControl.Feedback />
           <HelpBlock>Validation is based on requested_amount length.</HelpBlock>
         </FormGroup>
@@ -95,17 +95,6 @@ export default class payments extends Component {
       .then(response => {
         this.setState({ table_data: response.data.resp, table_rows: response.size})
       })
-  }
-
-
-  popoverHoverFocus(item) {
-    return (
-      <Popover id="popover-trigger-hover-focus" title={item.Bsname}>
-        <strong>Business TaxId</strong> {item.BsTaxId}.<br></br>
-        <strong>Business name</strong> {item.Bsname}.<br></br>
-        <strong>Business city</strong> {item.Bscity} / {item.Bsstate}.<br></br>
-      </Popover>
-    )
   }
 
   render() {
@@ -126,27 +115,22 @@ export default class payments extends Component {
             <Table responsive>
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>User</th>
-                  <th>Business</th>
-                  <th>Requested amout</th>
+                  <th>Loan</th>
+                  <th>Fee</th>
+                  <th>Amount Left</th>
+                  <th>Remaining Fees</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {items.map(item =>
-                  <tr key={item.BsTaxId}>
-                    <td>{item.BsTaxId}</td>
+                  <tr key={item.user}>
                     <td>{item.user}</td>
-                    <OverlayTrigger
-                      trigger={['hover', 'focus']}
-                      placement="right"
-                      overlay={this.popoverHoverFocus(item)}
-                    >
-                      <td>{item.Bsname}</td>
-                    </OverlayTrigger>
-
-                    <td>{item.requested_amount}</td>
+                    <td>{item.loan}</td>
+                    <td>{item.fee}</td>
+                    <td>{item.amount_left}</td>
+                    <td>{item.remaining_fees}</td>
                     <td>{item.status}</td>
                   </tr>
                 )}
@@ -162,7 +146,7 @@ export default class payments extends Component {
 
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Make an Application</Modal.Title>
+            <Modal.Title>Make a Payment</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>
@@ -171,7 +155,7 @@ export default class payments extends Component {
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.handleClose}>Close</Button>
-            <Button bsStyle="primary" onClick={this.handleAddApplication}>Pay</Button>
+            <Button bsStyle="primary" onClick={this.handleAddPayment}>Pay</Button>
           </Modal.Footer>
         </Modal>
       </div>

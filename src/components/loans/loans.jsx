@@ -88,6 +88,7 @@ export default class loans extends Component {
                   <th>User</th>
                   <th>Business</th>
                   <th>Requested amout</th>
+                  <th>Fees</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -105,6 +106,7 @@ export default class loans extends Component {
                     </OverlayTrigger>
 
                     <td>{item.requested_amount}</td>
+                    <td>{item.fees}</td>
                     <td>{this.handleStatus(item.status)}</td>
                   </tr>
                 )}
